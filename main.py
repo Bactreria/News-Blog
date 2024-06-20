@@ -149,7 +149,7 @@ email_subject = f"Weekly Blog Digest - {email_subject_date}"
 yag = yagmail.SMTP(os.getenv("EMAIL_USER"), os.getenv("EMAIL_PASSWORD"))
 
 yag.send(
-    to="pavanushak0019@gmail.com",
+    to=(your email),
     subject=email_subject,
     contents=email_content
 )

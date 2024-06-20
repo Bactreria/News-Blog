@@ -1,0 +1,10 @@
+crewai
+langchain-google-genai
+crewai-tools
+python-dotenv
+python-dotenv
+newsapi-python
+crewai
+langchain-google-genai
+markdown2==2.4.0
+yagmail==0.14.260

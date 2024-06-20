@@ -3,6 +3,9 @@ load_dotenv()
 import os
 from datetime import datetime, timedelta
 from crewai_tools import SerperDevTool
+ 
+end_date = datetime.today().strftime("%Y-%m-%d")
+start_date = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d")
 
 # Initialize the tool for internet searching capabilities with filters for credible sources
 tool = SerperDevTool(
@@ -14,8 +17,8 @@ tool = SerperDevTool(
         ],
         "exclude": ["reddit.com", "quora.com", "similar sites"],
         "date_range": {
-            "start_date": (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d"),
-            "end_date": datetime.today().strftime("%Y-%m-%d")
+            "start_date": start_date,
+            "end_date": end_date
         }
     }
 )

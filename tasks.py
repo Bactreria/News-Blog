@@ -1,6 +1,5 @@
 from crewai import Task
 from tools import tool
-
 def create_news_research_task(agent, company, start_date, end_date):
     return Task(
         description=(
@@ -22,4 +21,15 @@ def create_news_summarize_task(agent, company):
         tools=[tool],
         agent=agent,
         async_execution=False
+    )
+
+def create_date_verification_task(agent, company, start_date, end_date):
+    return Task(
+        description=(
+            f"Verify that the dates of all articles about {company} are within the range {start_date} to {end_date}. "
+            "Filter out any articles that are not within this range."
+        ),
+        expected_output=f'Filtered list of articles about {company} strictly within {start_date} to {end_date}.',
+        tools=[tool],
+        agent=agent
     )

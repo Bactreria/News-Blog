@@ -12,7 +12,8 @@ def create_news_researcher(llm):
         ),
         tools=[tool],
         llm=llm,
-        allow_delegation=True
+        allow_delegation=True,
+        max_iter=5   
     )
 
 def create_news_summarizer(llm):
@@ -26,7 +27,8 @@ def create_news_summarizer(llm):
         ),
         tools=[tool],
         llm=llm,
-        allow_delegation=False
+        allow_delegation=False,
+        max_iter=5   
     )
 
 def create_date_verifier(llm):
@@ -40,5 +42,6 @@ def create_date_verifier(llm):
         ),
         tools=[tool],
         llm=llm,
-        allow_delegation=False
+        allow_delegation=False,
+        max_iter=7   
     )

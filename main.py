@@ -41,7 +41,19 @@ output_file_date = datetime.now().strftime("%Y%m%d")
 output_file = f'competitors_weekly_news_{output_file_date}.md'
 
 # List of companies
-companies = ["Amdocs"]
+companies = [
+    "Amdocs", "BillingPlatform", "Binary Stream", "BluLogix", "Aptitude",
+    "Chargebee", "ChargeOver", "Cleeng", "CSG", "Evergen",
+    "Gotransverse", "LogiSense", "Maxio", "MonetizeNow", "OneBill",
+    "Opencell", "NetSuite", "Recurly", "RecVue", "Rev.io",
+    "Intacct", "Stax", "Stripe Billing", "Vindicia", "Workday",
+    "Zoho", "Zone & Co", "Zuora", "Aria", "Amberflo",
+    "IDI Billing Solutions", "Billwerk", "Cerillion", "m3ter", "Metronome",
+    "Octane", "Orb", "Ordway Labs", "Paddle", "Piano.io",
+    "Subskribe", "Wingback", "SAP BRIM", "Oracle BRM", "Moesif",
+    "Cacheflow"
+]
+
 
 # Retry mechanism for kickoff
 def kickoff_with_retry(crew, inputs, max_retries=5):
@@ -56,10 +68,8 @@ def kickoff_with_retry(crew, inputs, max_retries=5):
             time.sleep(wait_time)
     raise Exception("Maximum retry attempts reached. The service may be down.")
 
-# Execute task process for each company
-summarized_news = ["# Weekly News Digest\n\n"]
-
-for company in companies:
+# Function to process each company sequentially
+def process_company(company):
     try:
         # Create unique tasks for each company
         research_task = create_news_research_task(news_researcher, company, start_date, end_date)
@@ -73,13 +83,27 @@ for company in companies:
             process=Process.sequential
         )
 
-        # Execute the crew tasks
-        result = kickoff_with_retry(crew, {'company': company})
+        # Create context for the company
+        context = {
+            "company": company + "billing company",
+            "date_range": {
+                "start": start_date.strftime("%Y-%m-%d"),
+                "end": end_date.strftime("%Y-%m-%d")
+            }
+        }
 
-        # Append the result after verification
-        summarized_news.append(f"## {company}\n{result}\n\n")
+        # Execute the crew tasks
+        result = kickoff_with_retry(crew, {'company': company, 'context': context})
+        return f"## {company}\n{result}\n\n"
     except Exception as e:
         print(f"Failed to execute tasks for {company}: {e}")
+        return f"## {company}\nFailed to retrieve news.\n\n"
+
+# Execute task process for each company sequentially
+summarized_news = ["# Weekly News Digest\n\n"]
+
+for company in companies:
+    summarized_news.append(process_company(company))
 
 # Write all summarized news to a single file
 with open(output_file, 'w') as file:
@@ -122,7 +146,7 @@ email_subject = f"Weekly Blog Digest - {email_subject_date}"
 yag = yagmail.SMTP(os.getenv("EMAIL_USER"), os.getenv("EMAIL_PASSWORD"))
 
 yag.send(
-    to=(your email),
+    to="pavanusha0019@gmail.com",
     subject=email_subject,
     contents=email_content
 )
